@@ -50,7 +50,7 @@
     const vw = video.videoWidth;
     const vh = video.videoHeight;
     hiddenCanvas.width = vw;
-    hiddenCanvas.height = (vw / 16) * 9;
+    hiddenCanvas.height = vh;
     const ctx = hiddenCanvas.getContext("2d");
 
     // optional: draw a simple overlay (white border)
