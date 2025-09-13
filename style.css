@@ -16,11 +16,20 @@ body {
 
 video {
   aspect-ratio: 16 / 9;
-  width: 1280px;
-  height: 720px;
+  width: 100%;
   background: #000;
   border-radius: 6px;
   display: block;
+  object-fit: cover;
+}
+
+.video-container {
+  width: 1280;
+  height: 720;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  border: 1px solid black;
 }
 
 .controls {
