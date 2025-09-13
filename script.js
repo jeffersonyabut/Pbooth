@@ -14,8 +14,8 @@
     const stream = await navigator.mediaDevices.getUserMedia({
       video: {
         facingMode: "user",
-        width: { ideal: 1280 },
-        height: { ideal: 720 },
+        width: { ideal: 1024 },
+        height: { ideal: 768 },
         aspectRatio: 16 / 9,
       },
       audio: false,
