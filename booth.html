@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Static Photobooth</title>
+    <title>Photobooth</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -15,9 +15,13 @@
 
       <div class="controls">
         <button id="captureBtn">Capture</button>
+        <select for="CamSelect" id="CamSelect"></select>
       </div>
     </div>
 
+    <div>
+      <p style="color: #f7f4ea">timer: <span id="second">sec</span></p>
+    </div>
     <div class="gallery">
       <div id="thumbs"></div>
       <button id="stripBtn">Download Strip</button>

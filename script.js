@@ -1,4 +1,5 @@
 (async function () {
+  const cameraSelect = document.getElementById("CamSelect");
   const video = document.getElementById("video");
   const captureBtn = document.getElementById("captureBtn");
   const thumbs = document.getElementById("thumbs");
@@ -9,80 +10,100 @@
   // store dataURLs of captures
   const captures = [];
 
-  // 1) Request camera
-  try {
+  // // 1) Request camera
+  // try {
+  //   const stream = await navigator.mediaDevices.getUserMedia({
+  //     video: {
+  //       width: { ideal: 1024 },
+  //       height: { ideal: 768 },
+  //       aspectRatio: 16 / 9,
+  //     },
+  //     audio: false,
+  //   });
+  //   video.srcObject = stream;
+  //   await video.play();
+  // } catch (err) {
+  //   console.error("Camera error:", err);
+  //   alert(
+  //     "Could not access camera. Make sure you are on HTTPS and gave permission."
+  //   );
+  //   return;
+  // }
+  await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+
+  const devices = await navigator.mediaDevices.enumerateDevices();
+  const cameras = devices.filter((device) => device.kind === "videoinput");
+
+  cameraSelect.innerHTML = "";
+  cameras.forEach((camera) => {
+    const option = document.createElement("option");
+    option.value = camera.deviceId;
+    option.text = camera.label || `Camera ${cameraSelect.length + 1}`;
+    cameraSelect.appendChild(option);
+  });
+
+  async function startStream(deviceId) {
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        width: { ideal: 1024 },
-        height: { ideal: 768 },
-        aspectRatio: 16 / 9,
-      },
+      video: { deviceId: { exact: deviceId } },
       audio: false,
     });
     video.srcObject = stream;
-    await video.play();
-  } catch (err) {
-    console.error("Camera error:", err);
-    alert(
-      "Could not access camera. Make sure you are on HTTPS and gave permission."
-    );
-    return;
   }
+
+  if (cameras.length > 0) {
+    startStream(cameras[0].deviceId);
+  }
+
+  cameraSelect.addEventListener("change", () => {
+    startStream(cameraSelect.value);
+  });
 
   // 2) Capture single frame
   captureBtn.addEventListener("click", () => {
-    // // size canvas to video size (preserve aspect)
-    // const aspectW = 16;
-    // const aspectH = 9;
+    let countDown = new Date().getTime() + 4000;
 
-    // const screenW = window.innerWidth;
-    // const screenH = window.innerHeight;
+    let timer = setInterval(() => {
+      let now = new Date().getTime();
+      let distance = countDown - now;
+      let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      document.getElementById("second").textContent = seconds + 1;
+      if (distance <= 2) {
+        const vw = video.videoWidth;
+        const vh = video.videoHeight;
 
-    // let wi = screenW;
-    // let he = (screenW / aspectW) * aspectH;
+        const targetH = (vw / 16) * 9;
+        const targetW = vw;
+        const sy = (vh - targetH) / 2;
 
-    // if (he > screenH) {
-    //   he = screenH;
-    //   wi = (screenH / aspectH) * aspectW;
-    // }
+        hiddenCanvas.width = targetW;
+        hiddenCanvas.height = targetH;
+        const ctx = hiddenCanvas.getContext("2d");
 
-    const vw = video.videoWidth;
-    const vh = video.videoHeight;
+        // white border
+        ctx.drawImage(video, 0, sy, targetW, targetH, 0, 0, targetW, targetH);
+        ctx.lineWidth = 60;
+        ctx.strokeStyle = "#F7F4EA";
+        ctx.strokeRect(0, 0, targetW, targetH);
 
-    const targetH = (vw / 16) * 9;
-    const targetW = vw;
-    const sy = (vh - targetH) / 2;
+        if (captures.length >= 2) {
+          stripBtn.style.display = "flex";
+          clearBtn.style.display = "flex";
+        }
 
-    hiddenCanvas.width = targetW;
-    hiddenCanvas.height = targetH;
-    const ctx = hiddenCanvas.getContext("2d");
+        if (captures.length >= 3) {
+          return;
+        }
 
-    // optional: draw a simple overlay (white border)
-    ctx.drawImage(video, 0, sy, targetW, targetH, 0, 0, targetW, targetH);
-    ctx.lineWidth = 80;
-    ctx.strokeStyle = "#F7F4EA";
-    ctx.strokeRect(0, 0, targetW, targetH);
+        // convert to data URL (PNG)
+        const dataUrl = hiddenCanvas.toDataURL("image/png");
 
-    // if (captures.length === 0) {
-    //   ctx.strokeRect(0, -20, vw, vh);
-    //   ctx.font = `56px Helvetica`;
-    //   ctx.fillStyle = "white";
-    //   ctx.fillText("prizzajeff", 10, vh - 10);
-    // }
+        captures.push(dataUrl);
+        addThumbnail(dataUrl);
 
-    if (captures.length >= 2) {
-      stripBtn.style.display = "flex";
-      clearBtn.style.display = "flex";
-    }
-
-    if (captures.length >= 3) {
-      return;
-    }
-
-    // convert to data URL (PNG)
-    const dataUrl = hiddenCanvas.toDataURL("image/png");
-    captures.push(dataUrl);
-    addThumbnail(dataUrl);
+        clearInterval(timer);
+        document.getElementById("second").textContent = 0;
+      }
+    }, 1000);
   });
 
   // create thumbnail + download link

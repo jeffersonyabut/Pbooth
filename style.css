@@ -33,7 +33,8 @@ body {
   gap: 8px;
 }
 
-button {
+button,
+select {
   padding: 8px 12px;
   border-radius: 6px;
   border: 1px solid #ccc;
@@ -44,10 +45,12 @@ button {
 
 #stripBtn {
   display: none;
+  width: max-content;
 }
 
 #clearBtn {
   display: none;
+  width: max-content;
 }
 
 .thumb {
@@ -79,6 +82,9 @@ button {
   }
 
   .gallery {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
     max-width: 100%;
     height: max-content;
     background-color: #4a9782;
