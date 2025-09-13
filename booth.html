@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Static Photobooth</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="panel">
+      <h3 style="color: #f7f4ea">Prizzabooth</h3>
+      <video id="video" autoplay playsinline></video>
+      <div class="controls">
+        <button id="captureBtn">Capture</button>
+      </div>
+    </div>
+
+    <div class="gallery">
+      <div id="thumbs"></div>
+      <button id="stripBtn">Download Strip</button>
+      <button id="clearBtn">Clear</button>
+    </div>
+
+    <!-- Hidden canvas used for captures -->
+    <canvas id="hiddenCanvas" style="display: none"></canvas>
+
+    <script src="script.js"></script>
+  </body>
+</html>

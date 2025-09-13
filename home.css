@@ -1,0 +1,47 @@
+@font-face {
+  font-family: "Helvetica";
+  src: url("/public/fonts/Helvetica.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media (max-width: 720px) {
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #004030;
+  }
+
+  nav {
+    display: flex;
+  }
+
+  nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    row-gap: 10px;
+  }
+
+  nav li {
+    margin-bottom: 10px;
+    width: 100%;
+    background-color: #4a9782;
+    border-radius: 8px;
+  }
+
+  nav li a {
+    display: block;
+    color: black;
+    padding: 8px 16px;
+    text-decoration: none;
+    text-align: center;
+    font-size: 16px;
+    color: #fff9e5;
+  }
+}
