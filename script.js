@@ -52,7 +52,6 @@
 
     const targetH = (vw / 16) * 9;
     const targetW = vw;
-
     const sy = (vh - targetH) / 2;
 
     hiddenCanvas.width = targetW;
@@ -63,7 +62,7 @@
     ctx.drawImage(video, 0, sy, targetW, targetH, 0, 0, targetW, targetH);
     ctx.lineWidth = 80;
     ctx.strokeStyle = "#F7F4EA";
-    ctx.strokeRect(0, 0, vw, vh);
+    ctx.strokeRect(0, 0, targetW, targetH);
 
     // if (captures.length === 0) {
     //   ctx.strokeRect(0, -20, vw, vh);
