@@ -20,7 +20,16 @@
       },
       audio: false,
     });
+
     video.srcObject = stream;
+
+    const isFront = video.facingMode === "user";
+    console.log(isFront);
+    if (isFront) {
+      video.style.transform = "scaleX(-1)";
+    } else {
+      video.style.transform = "none";
+    }
     await video.play();
   } catch (err) {
     console.error("Camera error:", err);
@@ -59,6 +68,11 @@
     const ctx = hiddenCanvas.getContext("2d");
 
     // optional: draw a simple overlay (white border)
+
+    if (isFront) {
+      ctx.scale(-1, 1);
+    }
+
     ctx.drawImage(video, 0, sy, targetW, targetH, 0, 0, targetW, targetH);
     ctx.lineWidth = 80;
     ctx.strokeStyle = "#F7F4EA";
