@@ -12,8 +12,11 @@
   // 1) Request camera
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
-      aspectRatio: 16 / 9,
-      video: { width: 1280, height: 720 },
+      video: {
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+        aspectRatio: 16 / 9,
+      },
       audio: false,
     });
     video.srcObject = stream;
@@ -28,23 +31,23 @@
 
   // 2) Capture single frame
   captureBtn.addEventListener("click", () => {
-    // size canvas to video size (preserve aspect)
-    const aspectW = 16;
-    const aspectH = 9;
+    // // size canvas to video size (preserve aspect)
+    // const aspectW = 16;
+    // const aspectH = 9;
 
-    const screenW = window.innerWidth;
-    const screenH = window.innerHeight;
+    // const screenW = window.innerWidth;
+    // const screenH = window.innerHeight;
 
-    let wi = screenW;
-    let he = (screenW / aspectW) * aspectH;
+    // let wi = screenW;
+    // let he = (screenW / aspectW) * aspectH;
 
-    if (he > screenH) {
-      he = screenH;
-      wi = (screenH / aspectH) * aspectW;
-    }
+    // if (he > screenH) {
+    //   he = screenH;
+    //   wi = (screenH / aspectH) * aspectW;
+    // }
 
-    const vw = wi;
-    const vh = he;
+    const vw = video.videoWidth;
+    const vh = video.videoHeight;
     hiddenCanvas.width = vw;
     hiddenCanvas.height = vh;
     const ctx = hiddenCanvas.getContext("2d");
