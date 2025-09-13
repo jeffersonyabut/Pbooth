@@ -12,7 +12,8 @@
   // 1) Request camera
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: { width: 1280, height: 720 },
+      video: { width: { ideal: 600 } },
+      aspectRatio: 16 / 9,
       audio: false,
     });
     video.srcObject = stream;
