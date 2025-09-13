@@ -29,8 +29,22 @@
   // 2) Capture single frame
   captureBtn.addEventListener("click", () => {
     // size canvas to video size (preserve aspect)
-    const vw = 1280;
-    const vh = 720;
+    const aspectW = 16;
+    const aspectH = 9;
+
+    const screenW = window.innerWidth;
+    const screenH = window.innerHeight;
+
+    let wi = screenW;
+    let he = (screenW / aspectW) * aspectH;
+
+    if (he > screenH) {
+      he = screenH;
+      wi = (screenH / aspectH) * aspectW;
+    }
+
+    const vw = wi;
+    const vh = he;
     hiddenCanvas.width = vw;
     hiddenCanvas.height = vh;
     const ctx = hiddenCanvas.getContext("2d");
