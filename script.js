@@ -49,12 +49,18 @@
 
     const vw = video.videoWidth;
     const vh = video.videoHeight;
-    hiddenCanvas.width = vw;
-    hiddenCanvas.height = vh;
+
+    const targetH = (vw / 16) * 9;
+    const targetW = vw;
+
+    const sy = (vh - targetH) / 2;
+
+    hiddenCanvas.width = targetW;
+    hiddenCanvas.height = targetH;
     const ctx = hiddenCanvas.getContext("2d");
 
     // optional: draw a simple overlay (white border)
-    ctx.drawImage(video, 0, 0, vw, vh);
+    ctx.drawImage(video, 0, sy, targetW, targetH, 0, 0, targetW, targetH);
     ctx.lineWidth = 80;
     ctx.strokeStyle = "#F7F4EA";
     ctx.strokeRect(0, 0, vw, vh);
