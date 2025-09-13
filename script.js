@@ -13,6 +13,7 @@
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
       video: {
+        facingMode: "user",
         width: { ideal: 1280 },
         height: { ideal: 720 },
         aspectRatio: 16 / 9,
@@ -49,7 +50,7 @@
     const vw = video.videoWidth;
     const vh = video.videoHeight;
     hiddenCanvas.width = vw;
-    hiddenCanvas.height = vh;
+    hiddenCanvas.height = (vw / 16) * 9;
     const ctx = hiddenCanvas.getContext("2d");
 
     // optional: draw a simple overlay (white border)
