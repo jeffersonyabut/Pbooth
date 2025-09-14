@@ -39,14 +39,6 @@
   cameraSelect.innerHTML = "";
   cameras.forEach((camera) => {
     const option = document.createElement("option");
-    if (/front|user/i.test(camera.label)) {
-      document.getElementById("video").style.transform = "scaleX(-1)";
-    }
-
-    if (/back|rear|environment/i.test(camera.label)) {
-      console.log("👉 Likely a back camera");
-    }
-
     option.value = camera.deviceId;
     option.text = camera.label || `Camera ${cameraSelect.length + 1}`;
     cameraSelect.appendChild(option);
@@ -69,7 +61,22 @@
       audio: false,
     });
     currentStream = stream;
+    console.log(deviceId);
     video.srcObject = stream;
+    invert(deviceId);
+  }
+
+  async function invert(deviceId) {
+    const camera = cameras.find((c) => c.deviceId === deviceId);
+    if (!camera) return;
+
+    if (/front|user/i.test(camera.label)) {
+      video.style.transform = "scaleX(-1)";
+    }
+
+    if (/back|rear|environment/i.test(camera.label)) {
+      video.style.transform = "scaleX(1)";
+    }
   }
 
   if (cameras.length > 0) {
