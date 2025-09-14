@@ -98,6 +98,17 @@
         console.log(invertImg);
         if (invertImg) {
           ctx.scale(-1, 1);
+          ctx.drawImage(
+            video,
+            0,
+            sy,
+            targetW,
+            targetH,
+            -targetW,
+            0,
+            targetW,
+            targetH
+          );
           console.log("inverted photo");
         }
 
@@ -125,6 +136,7 @@
 
         clearInterval(timer);
         document.getElementById("second").textContent = 0;
+        invertImg = 0;
       }
     }, 1000);
   });
