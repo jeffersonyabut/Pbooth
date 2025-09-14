@@ -42,11 +42,29 @@
     cameraSelect.appendChild(option);
   });
 
+  let currentStream;
+
+  function stopStream() {
+    if (currentStream) {
+      currentStream.getTracks().forEach((track) => track.stop());
+    }
+  }
+
+  if (devices && /front|user/i.test(devices.label)) {
+    video.classList.add("mirrored");
+  } else {
+    video.classList.remove("mirrored");
+  }
+
   async function startStream(deviceId) {
+    stopStream();
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: { deviceId: { exact: deviceId } },
+      video: {
+        deviceId: { exact: deviceId },
+      },
       audio: false,
     });
+    currentStream = stream;
     video.srcObject = stream;
   }
 

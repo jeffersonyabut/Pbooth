@@ -33,8 +33,7 @@ body {
   gap: 8px;
 }
 
-button,
-select {
+button {
   padding: 8px 12px;
   border-radius: 6px;
   border: 1px solid #ccc;
@@ -95,5 +94,19 @@ select {
   .video-container {
     width: 320px;
     height: 180px;
+  }
+
+  video.mirrored {
+    transform: scaleX(-1);
+  }
+
+  select {
+    border-radius: 6px;
+    appearance: none;
+    padding: 8px 40px 8px 10px; /* Space for custom arrow */
+    background-image: url(/public/components/arrow-drop-down-line.svg);
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 18px;
   }
 }
