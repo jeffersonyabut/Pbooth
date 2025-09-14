@@ -133,8 +133,9 @@
   }
 
   captureBtn.addEventListener("click", () => {
-    let seconds = document.getElementById("secSelect").value;
-    document.getElementById("second").textContent = seconds;
+    // let seconds = document.getElementById("secSelect").value;
+    let seconds = document.getElementById("second").textContent;
+    let savesec = seconds;
 
     let timer = setInterval(() => {
       seconds--;
@@ -142,7 +143,7 @@
 
       if (seconds <= 0) {
         clearInterval(timer);
-        document.getElementById("second").textContent = 0;
+        document.getElementById("second").textContent = savesec;
         captureFrame();
       }
     }, 1000);
