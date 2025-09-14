@@ -96,10 +96,6 @@ button {
     height: 180px;
   }
 
-  video {
-    transform: scaleX(-1);
-  }
-
   select {
     border-radius: 6px;
     appearance: none;
