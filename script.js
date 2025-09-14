@@ -9,23 +9,60 @@
 
   // store dataURLs of captures
   const captures = [];
-
-  await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-
-  const devices = await navigator.mediaDevices.enumerateDevices();
-  const cameras = devices.filter((device) => device.kind === "videoinput");
-
-  console.log(devices);
-
-  cameraSelect.innerHTML = "";
-  cameras.forEach((camera) => {
-    const option = document.createElement("option");
-    option.value = camera.deviceId;
-    option.text = camera.label || `Camera ${cameraSelect.length + 1}`;
-    cameraSelect.appendChild(option);
-  });
-
   let currentStream;
+
+  try {
+    await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const cameras = devices.filter((device) => device.kind === "videoinput");
+
+    console.log(devices);
+
+    cameraSelect.innerHTML = "";
+    cameras.forEach((camera) => {
+      const option = document.createElement("option");
+      option.value = camera.deviceId;
+      option.text = camera.label || `Camera ${cameraSelect.length + 1}`;
+      cameraSelect.appendChild(option);
+    });
+
+    if (cameras.length > 0) {
+      startStream(cameras[0].deviceId);
+    }
+
+    cameraSelect.addEventListener("change", () => {
+      startStream(cameraSelect.value);
+    });
+  } catch (err) {
+    console.error("Error initializing cameras:", err);
+    alert(
+      "Could not access camera. Please check permissions or device settings."
+    );
+  }
+
+  // await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+
+  // const devices = await navigator.mediaDevices.enumerateDevices();
+  // const cameras = devices.filter((device) => device.kind === "videoinput");
+
+  // console.log(devices);
+
+  // cameraSelect.innerHTML = "";
+  // cameras.forEach((camera) => {
+  //   const option = document.createElement("option");
+  //   option.value = camera.deviceId;
+  //   option.text = camera.label || `Camera ${cameraSelect.length + 1}`;
+  //   cameraSelect.appendChild(option);
+  // });
+
+  // if (cameras.length > 0) {
+  //   startStream(cameras[0].deviceId);
+  // }
+
+  // cameraSelect.addEventListener("change", () => {
+  //   startStream(cameraSelect.value);
+  // });
 
   function stopStream() {
     if (currentStream) {
@@ -47,7 +84,8 @@
   }
 
   let invertImg = 0;
-  async function invert(deviceId) {
+
+  function invert(deviceId) {
     const camera = cameras.find((c) => c.deviceId === deviceId);
     if (!camera) return;
 
@@ -62,13 +100,13 @@
     }
   }
 
-  if (cameras.length > 0) {
-    startStream(cameras[0].deviceId);
-  }
+  // if (cameras.length > 0) {
+  //   startStream(cameras[0].deviceId);
+  // }
 
-  cameraSelect.addEventListener("change", () => {
-    startStream(cameraSelect.value);
-  });
+  // cameraSelect.addEventListener("change", () => {
+  //   startStream(cameraSelect.value);
+  // });
 
   // 2) Capture single frame
   async function captureFrame() {
@@ -145,7 +183,7 @@
     }, 1000);
   });
 
-  // create thumbnail + download link
+  // preview images
   function addThumbnail(dataUrl) {
     const wrap = document.createElement("div");
     wrap.className = "thumb";
@@ -157,19 +195,19 @@
     const meta = document.createElement("div");
     meta.className = "meta";
 
-    const copyBtn = document.createElement("button");
-    copyBtn.textContent = "Copy to clipboard";
-    copyBtn.addEventListener("click", async () => {
-      try {
-        const blob = dataURLToBlob(dataUrl);
-        await navigator.clipboard.write([
-          new ClipboardItem({ [blob.type]: blob }),
-        ]);
-        alert("Image copied to clipboard (may require secure context).");
-      } catch (err) {
-        alert("Copy failed: " + (err && err.message));
-      }
-    });
+    // const copyBtn = document.createElement("button");
+    // copyBtn.textContent = "Copy to clipboard";
+    // copyBtn.addEventListener("click", async () => {
+    //   try {
+    //     const blob = dataURLToBlob(dataUrl);
+    //     await navigator.clipboard.write([
+    //       new ClipboardItem({ [blob.type]: blob }),
+    //     ]);
+    //     alert("Image copied to clipboard (may require secure context).");
+    //   } catch (err) {
+    //     alert("Copy failed: " + (err && err.message));
+    //   }
+    // });
 
     wrap.appendChild(img);
     wrap.appendChild(meta);
@@ -230,11 +268,9 @@
       // draw each image one under another
 
       const x = (stripW - width) / 2;
-      const sy = (stripH - height) / 2;
       let y = 0;
       imgs.forEach((img) => {
         // force to fit with aspect ratio
-
         if (img.width !== width) {
           const h = Math.round(img.height * (width / img.width));
           ctx.drawImage(img, x, y + 30, width, h);
@@ -249,9 +285,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `strip-${new Date()
-          .toISOString()
-          .replace(/[:.]/g, "-")}.png`;
+        a.download = `jeffsphotobooth.png`;
         document.body.appendChild(a);
         a.click();
         a.remove();
