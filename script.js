@@ -11,19 +11,6 @@
   const captures = [];
   let currentStream;
 
-  async function startStream(deviceId, cameras) {
-    stopStream();
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        deviceId: { exact: deviceId },
-      },
-      audio: false,
-    });
-    currentStream = stream;
-    video.srcObject = stream;
-    invert(deviceId, cameras);
-  }
-
   try {
     await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
 
@@ -41,7 +28,7 @@
     });
 
     if (cameras.length > 0) {
-      startStream(cameras[0].deviceId);
+      startStream(cameras[0].deviceId, cameras);
     }
 
     cameraSelect.addEventListener("change", () => {
@@ -80,23 +67,22 @@
   function stopStream() {
     if (currentStream) {
       currentStream.getTracks().forEach((track) => track.stop());
+      currentStream = null;
     }
   }
 
-  // async function startStream(deviceId) {
-  //   stopStream();
-  //   const stream = await navigator.mediaDevices.getUserMedia({
-  //     video: {
-  //       deviceId: { exact: deviceId },
-  //     },
-  //     audio: false,
-  //   });
-  //   currentStream = stream;
-  //   video.srcObject = stream;
-  //   invert(deviceId);
-  // }
-
-  let invertImg = 0;
+  async function startStream(deviceId, cameras) {
+    stopStream();
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        deviceId: { exact: deviceId },
+      },
+      audio: false,
+    });
+    currentStream = stream;
+    video.srcObject = stream;
+    invert(deviceId, cameras);
+  }
 
   function invert(deviceId, cameras) {
     const camera = cameras.find((c) => c.deviceId === deviceId);
@@ -112,6 +98,10 @@
       invertImg = 0;
     }
   }
+
+  let invertImg = 0;
+
+  alert("test17");
 
   // if (cameras.length > 0) {
   //   startStream(cameras[0].deviceId);
