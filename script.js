@@ -10,25 +10,6 @@
   // store dataURLs of captures
   const captures = [];
 
-  // // 1) Request camera
-  // try {
-  //   const stream = await navigator.mediaDevices.getUserMedia({
-  //     video: {
-  //       width: { ideal: 1024 },
-  //       height: { ideal: 768 },
-  //       aspectRatio: 16 / 9,
-  //     },
-  //     audio: false,
-  //   });
-  //   video.srcObject = stream;
-  //   await video.play();
-  // } catch (err) {
-  //   console.error("Camera error:", err);
-  //   alert(
-  //     "Could not access camera. Make sure you are on HTTPS and gave permission."
-  //   );
-  //   return;
-  // }
   await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
 
   const devices = await navigator.mediaDevices.enumerateDevices();
@@ -112,6 +93,7 @@
         ctx.drawImage(video, 0, sy, targetW, targetH, 0, 0, targetW, targetH);
         ctx.lineWidth = 60;
         ctx.strokeStyle = "#F7F4EA";
+        ctx.scale(-1, 1);
         ctx.strokeRect(0, 0, targetW, targetH);
 
         if (captures.length >= 2) {
