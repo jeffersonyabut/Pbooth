@@ -43,7 +43,19 @@
     });
     currentStream = stream;
     video.srcObject = stream;
-    invert(deviceId);
+  }
+
+  async function startFrontStream(deviceId) {
+    stopStream();
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+        aspectRatio: 16 / 9,
+      },
+    });
+    currentStream = stream;
+    video.srcObject = stream;
   }
 
   let invertImg = 0;
@@ -54,11 +66,13 @@
     if (/front|user/i.test(camera.label)) {
       video.style.transform = "scaleX(-1)";
       invertImg = 1;
+      startFrontStream(deviceId);
     }
 
     if (/back|rear|environment/i.test(camera.label)) {
       video.style.transform = "scaleX(1)";
       invertImg = 0;
+      startStream(deviceId);
     }
   }
 
@@ -67,7 +81,7 @@
   }
 
   cameraSelect.addEventListener("change", () => {
-    startStream(cameraSelect.value);
+    invert(cameraSelect.value);
   });
 
   // 2) Capture single frame
