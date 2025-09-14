@@ -81,13 +81,14 @@
     const sy = (vh - targetH) / 2;
     console.log(targetH, targetW, sy);
     hiddenCanvas.width = targetW;
-    hiddenCanvas.height = targetH;
+    hiddenCanvas.height = targetH + 10;
     const ctx = hiddenCanvas.getContext("2d");
 
     // captured image manipulation
 
     ctx.save();
     console.log(invertImg);
+
     if (invertImg) {
       ctx.scale(-1, 1);
       ctx.drawImage(
@@ -107,9 +108,10 @@
     ctx.drawImage(video, 0, sy, targetW, targetH, 0, 0, targetW, targetH);
 
     ctx.restore();
-    ctx.lineWidth = 60;
-    ctx.strokeStyle = "#F7F4EA";
-    ctx.strokeRect(0, 0, targetW, targetH);
+    // ctx.fillRect(0, 0, targetW, targetH - 50);
+    // ctx.lineWidth = 60;
+    // ctx.fillStyle = "#F7F4EA";
+    // ctx.clearRect(0, targetH - 10, targetW, targetH);
 
     if (captures.length >= 2) {
       stripBtn.style.display = "flex";
@@ -214,22 +216,31 @@
       // width = max width, height = sum heights
       const width = Math.max(...imgs.map((i) => i.width));
       const height = imgs.reduce((s, i) => s + i.height, 0);
+      const stripW = width + 60;
+      const stripH = height + 250;
 
+      console.log(stripW, stripH);
       const stripCanvas = document.createElement("canvas");
-      stripCanvas.width = width;
-      stripCanvas.height = height;
+      stripCanvas.width = stripW;
+      stripCanvas.height = stripH;
       const ctx = stripCanvas.getContext("2d");
 
+      ctx.fillStyle = "#F7F4EA";
+      ctx.fillRect(0, 0, stripW, stripH);
       // draw each image one under another
+
+      const x = (stripW - width) / 2;
+      const sy = (stripH - height) / 2;
       let y = 0;
       imgs.forEach((img) => {
-        // if widths differ, scale to fit width preserving aspect ratio
+        // force to fit with aspect ratio
+
         if (img.width !== width) {
           const h = Math.round(img.height * (width / img.width));
-          ctx.drawImage(img, 0, y, width, h);
+          ctx.drawImage(img, x, y + 30, width, h);
           y += h;
         } else {
-          ctx.drawImage(img, 0, y);
+          ctx.drawImage(img, x, y + 30);
           y += img.height;
         }
       });
