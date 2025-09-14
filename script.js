@@ -136,7 +136,6 @@
 
         clearInterval(timer);
         document.getElementById("second").textContent = 0;
-        invertImg = 0;
       }
     }, 1000);
   });
