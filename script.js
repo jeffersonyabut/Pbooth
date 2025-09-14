@@ -90,10 +90,22 @@
         const ctx = hiddenCanvas.getContext("2d");
 
         // white border
-        ctx.drawImage(video, 0, sy, targetW, targetH, 0, 0, targetW, targetH);
+        ctx.save();
+        ctx.scale(-1, 1);
+        ctx.drawImage(
+          video,
+          0,
+          sy,
+          targetW,
+          targetH,
+          -targetW,
+          0,
+          targetW,
+          targetH
+        );
+        ctx.restore();
         ctx.lineWidth = 60;
         ctx.strokeStyle = "#F7F4EA";
-        ctx.scale(-1, 1);
         ctx.strokeRect(0, 0, targetW, targetH);
 
         if (captures.length >= 2) {
