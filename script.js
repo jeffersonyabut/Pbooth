@@ -42,21 +42,23 @@
       audio: false,
     });
     currentStream = stream;
-    console.log(deviceId);
     video.srcObject = stream;
     invert(deviceId);
   }
 
+  let invertImg = 0;
   async function invert(deviceId) {
     const camera = cameras.find((c) => c.deviceId === deviceId);
     if (!camera) return;
 
     if (/front|user/i.test(camera.label)) {
       video.style.transform = "scaleX(-1)";
+      invertImg = 1;
     }
 
     if (/back|rear|environment/i.test(camera.label)) {
       video.style.transform = "scaleX(1)";
+      invertImg = 0;
     }
   }
 
@@ -80,18 +82,25 @@
       if (distance <= 2) {
         const vw = video.videoWidth;
         const vh = video.videoHeight;
+        console.log(vw, vh);
 
         const targetH = (vw / 16) * 9;
         const targetW = vw;
         const sy = (vh - targetH) / 2;
-
+        console.log(targetH, targetW, sy);
         hiddenCanvas.width = targetW;
         hiddenCanvas.height = targetH;
         const ctx = hiddenCanvas.getContext("2d");
 
-        // white border
+        // captured image manipulation
+
         ctx.save();
         ctx.scale(-1, 1);
+
+        if (!invertImg) {
+          ctx.drawImage(video, 0, sy, targetW, targetH, 0, 0, targetW, targetH);
+        }
+
         ctx.drawImage(
           video,
           0,
@@ -103,6 +112,24 @@
           targetW,
           targetH
         );
+        // if (invertImg) {
+        //   ctx.drawImage(
+        //     video,
+        //     0,
+        //     sy,
+        //     targetW,
+        //     targetH,
+        //     -targetW,
+        //     0,
+        //     targetW,
+        //     targetH
+        //   );
+        //   console.log("working1");
+        // } else {
+        //   console.log("working");
+        //   ctx.drawImage(video, 0, sy, targetW, targetH, 0, 0, targetW, targetH);
+        // }
+
         ctx.restore();
         ctx.lineWidth = 60;
         ctx.strokeStyle = "#F7F4EA";
