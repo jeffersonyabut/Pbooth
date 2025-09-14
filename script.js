@@ -11,7 +11,7 @@
   const captures = [];
   let currentStream;
 
-  async function startStream(deviceId) {
+  async function startStream(deviceId, cameras) {
     stopStream();
     const stream = await navigator.mediaDevices.getUserMedia({
       video: {
@@ -21,24 +21,7 @@
     });
     currentStream = stream;
     video.srcObject = stream;
-    invert(deviceId);
-  }
-
-  let invertImg = 0;
-
-  function invert(deviceId) {
-    const camera = cameras.find((c) => c.deviceId === deviceId);
-    if (!camera) return;
-
-    if (/front|user/i.test(camera.label)) {
-      video.style.transform = "scaleX(-1)";
-      invertImg = 1;
-    }
-
-    if (/back|rear|environment/i.test(camera.label)) {
-      video.style.transform = "scaleX(1)";
-      invertImg = 0;
-    }
+    invert(deviceId, cameras);
   }
 
   try {
@@ -62,7 +45,7 @@
     }
 
     cameraSelect.addEventListener("change", () => {
-      startStream(cameraSelect.value);
+      startStream(cameraSelect.value, cameras);
     });
   } catch (err) {
     console.error("Error initializing cameras:", err);
@@ -113,22 +96,22 @@
   //   invert(deviceId);
   // }
 
-  // let invertImg = 0;
+  let invertImg = 0;
 
-  // function invert(deviceId) {
-  //   const camera = cameras.find((c) => c.deviceId === deviceId);
-  //   if (!camera) return;
+  function invert(deviceId, cameras) {
+    const camera = cameras.find((c) => c.deviceId === deviceId);
+    if (!camera) return;
 
-  //   if (/front|user/i.test(camera.label)) {
-  //     video.style.transform = "scaleX(-1)";
-  //     invertImg = 1;
-  //   }
+    if (/front|user/i.test(camera.label)) {
+      video.style.transform = "scaleX(-1)";
+      invertImg = 1;
+    }
 
-  //   if (/back|rear|environment/i.test(camera.label)) {
-  //     video.style.transform = "scaleX(1)";
-  //     invertImg = 0;
-  //   }
-  // }
+    if (/back|rear|environment/i.test(camera.label)) {
+      video.style.transform = "scaleX(1)";
+      invertImg = 0;
+    }
+  }
 
   // if (cameras.length > 0) {
   //   startStream(cameras[0].deviceId);
