@@ -50,12 +50,6 @@
     }
   }
 
-  if (devices && /front|user/i.test(devices.label)) {
-    video.classList.add("mirrored");
-  } else {
-    video.classList.remove("mirrored");
-  }
-
   async function startStream(deviceId) {
     stopStream();
     const stream = await navigator.mediaDevices.getUserMedia({

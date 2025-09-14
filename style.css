@@ -96,7 +96,7 @@ button {
     height: 180px;
   }
 
-  video.mirrored {
+  video {
     transform: scaleX(-1);
   }
 
