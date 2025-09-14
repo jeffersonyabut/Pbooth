@@ -95,40 +95,13 @@
         // captured image manipulation
 
         ctx.save();
-        ctx.scale(-1, 1);
-
-        if (!invertImg) {
-          ctx.drawImage(video, 0, sy, targetW, targetH, 0, 0, targetW, targetH);
+        console.log(invertImg);
+        if (invertImg) {
+          ctx.scale(-1, 1);
+          console.log("inverted photo");
         }
 
-        ctx.drawImage(
-          video,
-          0,
-          sy,
-          targetW,
-          targetH,
-          -targetW,
-          0,
-          targetW,
-          targetH
-        );
-        // if (invertImg) {
-        //   ctx.drawImage(
-        //     video,
-        //     0,
-        //     sy,
-        //     targetW,
-        //     targetH,
-        //     -targetW,
-        //     0,
-        //     targetW,
-        //     targetH
-        //   );
-        //   console.log("working1");
-        // } else {
-        //   console.log("working");
-        //   ctx.drawImage(video, 0, sy, targetW, targetH, 0, 0, targetW, targetH);
-        // }
+        ctx.drawImage(video, 0, sy, targetW, targetH, 0, 0, targetW, targetH);
 
         ctx.restore();
         ctx.lineWidth = 60;
