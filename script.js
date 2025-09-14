@@ -41,29 +41,6 @@
     );
   }
 
-  // await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-
-  // const devices = await navigator.mediaDevices.enumerateDevices();
-  // const cameras = devices.filter((device) => device.kind === "videoinput");
-
-  // console.log(devices);
-
-  // cameraSelect.innerHTML = "";
-  // cameras.forEach((camera) => {
-  //   const option = document.createElement("option");
-  //   option.value = camera.deviceId;
-  //   option.text = camera.label || `Camera ${cameraSelect.length + 1}`;
-  //   cameraSelect.appendChild(option);
-  // });
-
-  // if (cameras.length > 0) {
-  //   startStream(cameras[0].deviceId);
-  // }
-
-  // cameraSelect.addEventListener("change", () => {
-  //   startStream(cameraSelect.value);
-  // });
-
   function stopStream() {
     if (currentStream) {
       currentStream.getTracks().forEach((track) => track.stop());
@@ -100,16 +77,6 @@
   }
 
   let invertImg = 0;
-
-  alert("test17");
-
-  // if (cameras.length > 0) {
-  //   startStream(cameras[0].deviceId);
-  // }
-
-  // cameraSelect.addEventListener("change", () => {
-  //   startStream(cameraSelect.value);
-  // });
 
   // 2) Capture single frame
   async function captureFrame() {
@@ -149,11 +116,6 @@
     ctx.drawImage(video, 0, sy, targetW, targetH, 0, 0, targetW, targetH);
 
     ctx.restore();
-    // ctx.fillRect(0, 0, targetW, targetH - 50);
-    // ctx.lineWidth = 60;
-    // ctx.fillStyle = "#F7F4EA";
-    // ctx.clearRect(0, targetH - 10, targetW, targetH);
-
     if (captures.length >= 2) {
       stripBtn.style.display = "flex";
       clearBtn.style.display = "flex";
@@ -197,21 +159,6 @@
 
     const meta = document.createElement("div");
     meta.className = "meta";
-
-    // const copyBtn = document.createElement("button");
-    // copyBtn.textContent = "Copy to clipboard";
-    // copyBtn.addEventListener("click", async () => {
-    //   try {
-    //     const blob = dataURLToBlob(dataUrl);
-    //     await navigator.clipboard.write([
-    //       new ClipboardItem({ [blob.type]: blob }),
-    //     ]);
-    //     alert("Image copied to clipboard (may require secure context).");
-    //   } catch (err) {
-    //     alert("Copy failed: " + (err && err.message));
-    //   }
-    // });
-
     wrap.appendChild(img);
     wrap.appendChild(meta);
     thumbs.prepend(wrap);

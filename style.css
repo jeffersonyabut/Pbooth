@@ -96,16 +96,6 @@ button {
     height: 180px;
   }
 
-  select {
-    border-radius: 6px;
-    appearance: none;
-    padding: 8px 40px 8px 10px; /* Space for custom arrow */
-    background-image: url(/public/components/arrow-drop-down-line.svg);
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 18px;
-  }
-
   #hiddenCanvas {
     margin-bottom: 16px;
   }
