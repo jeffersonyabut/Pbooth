@@ -43,6 +43,10 @@
       document.getElementById("video").style.transform = "scaleX(-1)";
     }
 
+    if (/back|rear|environment/i.test(camera.label)) {
+      console.log("👉 Likely a back camera");
+    }
+
     option.value = camera.deviceId;
     option.text = camera.label || `Camera ${cameraSelect.length + 1}`;
     cameraSelect.appendChild(option);
