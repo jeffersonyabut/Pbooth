@@ -51,15 +51,15 @@
     if (!camera) return;
 
     if (/front|user/i.test(camera.label)) {
+      startStream(deviceId);
       video.style.transform = "scaleX(-1)";
       invertImg = 1;
-      startStream(deviceId);
     }
 
     if (/back|rear|environment/i.test(camera.label)) {
+      startStream(deviceId);
       video.style.transform = "scaleX(1)";
       invertImg = 0;
-      startStream(deviceId);
     }
   }
 
