@@ -43,6 +43,7 @@
     });
     currentStream = stream;
     video.srcObject = stream;
+    invert(deviceId);
   }
 
   let invertImg = 0;
@@ -51,13 +52,11 @@
     if (!camera) return;
 
     if (/front|user/i.test(camera.label)) {
-      startStream(deviceId);
       video.style.transform = "scaleX(-1)";
       invertImg = 1;
     }
 
     if (/back|rear|environment/i.test(camera.label)) {
-      startStream(deviceId);
       video.style.transform = "scaleX(1)";
       invertImg = 0;
     }
@@ -68,75 +67,78 @@
   }
 
   cameraSelect.addEventListener("change", () => {
-    invert(cameraSelect.value);
+    startStream(cameraSelect.value);
   });
 
   // 2) Capture single frame
+  async function captureFrame() {
+    const vw = video.videoWidth;
+    const vh = video.videoHeight;
+    console.log(vw, vh);
+
+    const targetH = (vw / 16) * 9;
+    const targetW = vw;
+    const sy = (vh - targetH) / 2;
+    console.log(targetH, targetW, sy);
+    hiddenCanvas.width = targetW;
+    hiddenCanvas.height = targetH;
+    const ctx = hiddenCanvas.getContext("2d");
+
+    // captured image manipulation
+
+    ctx.save();
+    console.log(invertImg);
+    if (invertImg) {
+      ctx.scale(-1, 1);
+      ctx.drawImage(
+        video,
+        0,
+        sy,
+        targetW,
+        targetH,
+        -targetW,
+        0,
+        targetW,
+        targetH
+      );
+      console.log("inverted photo");
+    }
+
+    ctx.drawImage(video, 0, sy, targetW, targetH, 0, 0, targetW, targetH);
+
+    ctx.restore();
+    ctx.lineWidth = 60;
+    ctx.strokeStyle = "#F7F4EA";
+    ctx.strokeRect(0, 0, targetW, targetH);
+
+    if (captures.length >= 2) {
+      stripBtn.style.display = "flex";
+      clearBtn.style.display = "flex";
+    }
+
+    if (captures.length >= 3) {
+      return;
+    }
+
+    // convert to data URL (PNG)
+    const dataUrl = hiddenCanvas.toDataURL("image/png");
+
+    captures.push(dataUrl);
+    addThumbnail(dataUrl);
+  }
+
   captureBtn.addEventListener("click", () => {
-    let countDown = new Date().getTime() + 4000;
+    let seconds = document.getElementById("secSelect").value;
+    document.getElementById("second").textContent = seconds;
 
     let timer = setInterval(() => {
-      let now = new Date().getTime();
-      let distance = countDown - now;
-      let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      document.getElementById("second").textContent = seconds + 1;
-      if (distance <= 2) {
-        const vw = video.videoWidth;
-        const vh = video.videoHeight;
-        console.log(vw, vh);
+      seconds--;
+      document.getElementById("second").textContent = seconds;
 
-        const targetH = (vw / 16) * 9;
-        const targetW = vw;
-        const sy = (vh - targetH) / 2;
-        console.log(targetH, targetW, sy);
-        hiddenCanvas.width = targetW;
-        hiddenCanvas.height = targetH;
-        const ctx = hiddenCanvas.getContext("2d");
-
-        // captured image manipulation
-
-        ctx.save();
-        console.log(invertImg);
-        if (invertImg) {
-          ctx.scale(-1, 1);
-          ctx.drawImage(
-            video,
-            0,
-            sy,
-            targetW,
-            targetH,
-            -targetW,
-            0,
-            targetW,
-            targetH
-          );
-          console.log("inverted photo");
-        }
-
-        ctx.drawImage(video, 0, sy, targetW, targetH, 0, 0, targetW, targetH);
-
-        ctx.restore();
-        ctx.lineWidth = 60;
-        ctx.strokeStyle = "#F7F4EA";
-        ctx.strokeRect(0, 0, targetW, targetH);
-
-        if (captures.length >= 2) {
-          stripBtn.style.display = "flex";
-          clearBtn.style.display = "flex";
-        }
-
-        if (captures.length >= 3) {
-          return;
-        }
-
-        // convert to data URL (PNG)
-        const dataUrl = hiddenCanvas.toDataURL("image/png");
-
-        captures.push(dataUrl);
-        addThumbnail(dataUrl);
-
+      if (seconds <= 0) {
         clearInterval(timer);
         document.getElementById("second").textContent = 0;
+        captureFrame();
       }
     }, 1000);
   });
