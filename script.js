@@ -45,19 +45,6 @@
     video.srcObject = stream;
   }
 
-  async function startFrontStream(deviceId) {
-    stopStream();
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        width: { ideal: 1280 },
-        height: { ideal: 720 },
-        aspectRatio: 16 / 9,
-      },
-    });
-    currentStream = stream;
-    video.srcObject = stream;
-  }
-
   let invertImg = 0;
   async function invert(deviceId) {
     const camera = cameras.find((c) => c.deviceId === deviceId);
@@ -66,7 +53,7 @@
     if (/front|user/i.test(camera.label)) {
       video.style.transform = "scaleX(-1)";
       invertImg = 1;
-      startFrontStream(deviceId);
+      startStream(deviceId);
     }
 
     if (/back|rear|environment/i.test(camera.label)) {
