@@ -34,9 +34,15 @@
   const devices = await navigator.mediaDevices.enumerateDevices();
   const cameras = devices.filter((device) => device.kind === "videoinput");
 
+  console.log(devices);
+
   cameraSelect.innerHTML = "";
   cameras.forEach((camera) => {
     const option = document.createElement("option");
+    if (/front|user/i.test(camera.label)) {
+      document.getElementById("video").style.transform = "scaleX(-1)";
+    }
+
     option.value = camera.deviceId;
     option.text = camera.label || `Camera ${cameraSelect.length + 1}`;
     cameraSelect.appendChild(option);
